@@ -2,6 +2,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.InputSystem;
 using CesiumForUnity;
 using UnityEngine.UI;
+using UnityEngine;
 
 [System.Serializable]
 public class Airport
@@ -16,5 +17,5 @@ public class Airport
     public double latitude;
     public double longitude;
     public string tz;
-    public CesiumForUnity.CesiumGeoreference location;
+    public GameObject location;
 }

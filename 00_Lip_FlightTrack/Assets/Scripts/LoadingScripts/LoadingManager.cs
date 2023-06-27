@@ -9,7 +9,7 @@ public class LoadingManager : MonoBehaviour
 {
     public bool autoRunOnAwake = true;
     public TextAsset airportsFile;
-    Airport[] airports;
+    public Airport[] airports;
 
     bool loaded;
 
@@ -38,7 +38,7 @@ public class LoadingManager : MonoBehaviour
     {
         foreach ( var airport in airports)
         {
-            Debug.Log(airport.name);
+            //Debug.Log(airport.latitude);
         }
     }
 }
