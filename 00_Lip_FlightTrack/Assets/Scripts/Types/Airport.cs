@@ -8,7 +8,7 @@ using UnityEngine;
 public class Airport
 {
     public string name;
-    public string iaco;
+    public string icao;
     public string iata;
     public string city;
     public string state;

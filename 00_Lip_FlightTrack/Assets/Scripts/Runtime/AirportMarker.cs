@@ -12,7 +12,7 @@ public class CityMarker : MonoBehaviour
         airports = gameObject.GetComponent<LoadingManager>().airports;
         foreach (Airport airport in airports)
         {
-            //airport.addComponent()
+            //Debug.Log(airport.icao);
         }
     }
 

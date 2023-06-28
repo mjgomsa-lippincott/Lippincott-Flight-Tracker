@@ -5,6 +5,7 @@ using CesiumForUnity;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine.Scripting;
+using UnityEngine;
 using UnityEngine.Timeline;
 
 public class AirportReader
@@ -49,8 +50,8 @@ public class AirportReader
                 {
                     case "name":
                         airportInfo.name = reader.ReadAsString(); break;
-                    case "iaco":
-                        airportInfo.iaco = reader.ReadAsString(); break;
+                    case "icao":
+                        airportInfo.icao = reader.ReadAsString(); break;
                     case "iata":
                         airportInfo.iata = reader.ReadAsString(); break;
                     case "city":
@@ -71,22 +72,16 @@ public class AirportReader
             }
         }
 
-        GameObject location = new GameObject("Georeference");
+        GameObject location = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        location.AddComponent<CesiumGlobeAnchor>();
+        location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
+        location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airportInfo.longitude, airportInfo.latitude, 0);
 
-        CesiumGeoreference georeference = location.AddComponent<CesiumGeoreference>();
-
-        georeference.longitude = airportInfo.longitude;
-        georeference.latitude = airportInfo.latitude;
-        georeference.height = 0;
-
-        GameObject Marker = new GameObject();
-        Marker.AddComponent<CesiumGlobeAnchor>();
-
-        Marker.AddComponent<SphereCollider>().radius = 10000;
-        Marker.AddComponent<MeshRenderer>();
-        Marker.transform.SetParent(location.transform);
+        location.GetComponent<SphereCollider>().radius = 10000;
+        location.transform.localScale = new Vector3(10000, 10000, 10000);
 
         airportInfo.location = location;
+
         return airportInfo;
     }
 }

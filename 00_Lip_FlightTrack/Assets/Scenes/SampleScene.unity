@@ -339,14 +339,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 747109426}
-  m_LocalRotation: {x: -1.3877788e-17, y: 1.7347235e-18, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1.0000004, z: 1}
+  m_LocalRotation: {x: -0.12759475, y: 0.7053284, z: -0.13290814, w: -0.6845194}
+  m_LocalPosition: {x: 655606, y: 348546, z: 31108}
+  m_LocalScale: {x: 1.0000201, y: 1.0000004, z: 1.00002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1371659746}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 26.92, y: -91.7, z: 0.127}
 --- !u!114 &747109428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,24 +470,24 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: 0.9991169734153983
-      y: 0.042015157184689164
-      z: 0
+      x: -0.05825271698363017
+      y: 0.6639303858588554
+      z: 0.7455490263878943
       w: 0
     c1:
-      x: 0.031283085261593756
-      y: -0.7439091880167777
-      z: 0.6675486527711664
+      x: -0.3321108854518054
+      y: -0.717153353109859
+      z: 0.6126941673755227
       w: 0
     c2:
-      x: -0.028047151544165014
-      y: 0.6669589510411462
-      z: 0.7445663938940248
+      x: -0.9414588100611949
+      y: 0.21191374730512327
+      z: -0.26227451516509764
       w: 0
     c3:
-      x: 199857.38755437796
-      y: -4752592.1964372555
-      z: 4236199.886979937
+      x: 864915.5695732774
+      y: -4963585.5273654675
+      z: 4492033.187880219
       w: 1
   _localToGlobeFixedMatrixIsValid: 1
 --- !u!114 &747109431
@@ -502,7 +502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b621ff6a9d4b8c4d85ac07de7f8b4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enableMovement: 1
+  _enableMovement: 0
   _enableRotation: 1
   _defaultMaximumSpeed: 100
   _enableDynamicSpeed: 1
@@ -561,7 +561,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.5
-  far clip plane: 1000000
+  far clip plane: 1000069.5
   field of view: 60
   orthographic: 0
   orthographic size: 5
