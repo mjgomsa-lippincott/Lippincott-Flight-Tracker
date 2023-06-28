@@ -8,7 +8,9 @@ using System;
 public class LoadingManager : MonoBehaviour
 {
     public bool autoRunOnAwake = true;
+    public bool JsonAirports = false;
     public TextAsset airportsFile;
+    public TextAsset airportsCSVFile;
     public Airport[] airports;
 
     bool loaded;
@@ -17,13 +19,19 @@ public class LoadingManager : MonoBehaviour
     {
         if (autoRunOnAwake)
         {
-            Load();
+            if (JsonAirports)
+            {
+                LoadJsonAirports();
+            } else
+            {
+                LoadCsvAirports();
+            }
         }
     }
 
-    public void Load()
+    public void LoadJsonAirports()
     {
-        Debug.Log("load");
+        Debug.Log("loading Json Airports");
         if (airportsFile != null)
         {
             AirportReader airportReader = new AirportReader();
@@ -31,6 +39,17 @@ public class LoadingManager : MonoBehaviour
         } else
         {
             Debug.Log("Is Null");
+        }
+        Debug.Log("Finished Loading Json Airports");
+    }
+
+    public void LoadCsvAirports()
+    {
+        Debug.Log("loading CSV Airports");
+        if (airportsCSVFile != null)
+        {
+            AirportCsvReader airportReader = new AirportCsvReader();
+            airports = airportReader.ReadAirports(airportsCSVFile);
         }
     }
 

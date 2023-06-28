@@ -16,6 +16,5 @@ public class Airport
     public double elevation;
     public double latitude;
     public double longitude;
-    public string tz;
     public GameObject location;
 }

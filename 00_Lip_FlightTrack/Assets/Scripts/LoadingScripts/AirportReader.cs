@@ -66,22 +66,22 @@ public class AirportReader
                         airportInfo.latitude = (double)reader.ReadAsDouble(); break;
                     case "lon":
                         airportInfo.longitude = (double)reader.ReadAsDouble(); break;
-                    case "tz":
-                        airportInfo.tz = reader.ReadAsString(); break;
                 }
             }
         }
 
+        //Setup Globe Anchor
         GameObject location = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         location.AddComponent<CesiumGlobeAnchor>();
         location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
         location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airportInfo.longitude, airportInfo.latitude, 0);
 
+        //Adjust Sizing of Globe
         location.GetComponent<SphereCollider>().radius = 10000;
         location.transform.localScale = new Vector3(10000, 10000, 10000);
+        location.name = airportInfo.name;
 
         airportInfo.location = location;
-
         return airportInfo;
     }
 }
