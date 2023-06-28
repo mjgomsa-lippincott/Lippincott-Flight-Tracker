@@ -18,3 +18,15 @@ public class Airport
     public string tz;
     public CesiumForUnity.CesiumGeoreference location;
 }
+
+
+/*"icao": "00AK",
+        "iata": "",
+        "name": "Lowell Field",
+        "city": "Anchor Point",
+        "state": "Alaska",
+        "country": "US",
+        "elevation": 450,
+        "lat": 59.94919968,
+        "lon": -151.695999146,
+        "tz": "America\/Anchorage"*/

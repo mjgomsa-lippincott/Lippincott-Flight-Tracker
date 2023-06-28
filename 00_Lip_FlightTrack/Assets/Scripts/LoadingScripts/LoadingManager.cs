@@ -8,10 +8,10 @@ using System;
 public class LoadingManager : MonoBehaviour
 {
     public bool autoRunOnAwake = true;
-    public TextAsset airportsFile;
-    Airport[] airports;
-
-    bool loaded;
+    
+    public TextAsset airplaneFile;
+    private string jsonStr;
+    public Airplane parsedData;
 
     void Awake()
     {
@@ -23,11 +23,13 @@ public class LoadingManager : MonoBehaviour
 
     public void Load()
     {
-        Debug.Log("load");
-        if (airportsFile != null)
+     // Debug.Log("loading...");
+
+        if (airplaneFile != null)
         {
-            AirportReader airportReader = new AirportReader();
-            airports = airportReader.ReadAirports(airportsFile);
+            //parse file into json str
+            jsonStr = airplaneFile.text;
+   
         } else
         {
             Debug.Log("Is Null");
@@ -36,9 +38,11 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
-        foreach ( var airport in airports)
+        parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
+       
+        foreach(var dataItem in parsedData.data)
         {
-            Debug.Log(airport.name);
+            Debug.Log("iataCode: " + dataItem.aircraft.iataCode);
         }
     }
 }
