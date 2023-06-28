@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 public class LoadingManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class LoadingManager : MonoBehaviour
     public TextAsset airplaneFile;
     private string jsonStr;
     public Airplane parsedData;
+    private List<DataItem> airplanes;
 
     void Awake()
     {
@@ -39,10 +41,11 @@ public class LoadingManager : MonoBehaviour
     private void Start()
     {
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
-       
-        foreach(var dataItem in parsedData.data)
+        airplanes = parsedData.data;
+        
+        foreach(var airplane in airplanes)
         {
-            Debug.Log("iataCode: " + dataItem.aircraft.iataCode);
+            Debug.Log("iataCode: " + airplane.aircraft.iataCode);
         }
     }
 }
