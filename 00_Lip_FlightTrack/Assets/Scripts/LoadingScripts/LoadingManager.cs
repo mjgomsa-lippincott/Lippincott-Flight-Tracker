@@ -5,9 +5,13 @@ using UnityEngine;
 using System.Linq;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using CesiumForUnity;
 
 public class LoadingManager : MonoBehaviour
 {
+    public Vector3 newSize;
+ // Vector3 newSize = new Vector3(10
+
     public bool autoRunOnAwake = true;
     
     public TextAsset airplaneFile;
@@ -25,7 +29,7 @@ public class LoadingManager : MonoBehaviour
 
     public void Load()
     {
-     // Debug.Log("loading...");
+    
 
         if (airplaneFile != null)
         {
@@ -45,7 +49,16 @@ public class LoadingManager : MonoBehaviour
         
         foreach(var airplane in airplanes)
         {
-            Debug.Log("iataCode: " + airplane.aircraft.iataCode);
+            //Debug.Log("iataCode: " + airplane.aircraft.iataCode);
+            GameObject location = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            location.AddComponent<CesiumGlobeAnchor>();
+            location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
+            location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airplane.geography.longitude, airplane.geography.latitude, airplane.geography.altitude);
+
+            location.name = airplane.flight.iataNumber;
+
+            // Modify the size of the location GameObject
+            location.transform.localScale = newSize;
         }
     }
 }
