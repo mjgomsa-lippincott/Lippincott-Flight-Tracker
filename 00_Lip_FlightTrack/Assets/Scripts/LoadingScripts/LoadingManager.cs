@@ -10,18 +10,20 @@ using CesiumForUnity;
 public class LoadingManager : MonoBehaviour
 {
     public bool autoRunOnAwake = true;
+
+    // airport data
     public bool JsonAirports = false;
     public TextAsset airportsFile;
     public TextAsset airportsCSVFile;
     public Airport[] airports;
-    public Vector3 newSize;
 
-    public bool autoRunOnAwake = true;
     
+    // airplane data
     public TextAsset airplaneFile;
     private string jsonStr;
     public Airplane parsedData;
     private List<DataItem> airplanes;
+    public Vector3 newSize;
 
     void Awake()
     {
@@ -82,7 +84,6 @@ public class LoadingManager : MonoBehaviour
         
         foreach(var airplane in airplanes)
         {
-            //Debug.Log("iataCode: " + airplane.aircraft.iataCode);
             GameObject location = GameObject.CreatePrimitive(PrimitiveType.Cube);
             location.AddComponent<CesiumGlobeAnchor>();
             location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
