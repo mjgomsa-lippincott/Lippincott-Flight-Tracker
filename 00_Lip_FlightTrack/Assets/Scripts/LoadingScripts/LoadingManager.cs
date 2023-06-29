@@ -12,11 +12,9 @@ public class LoadingManager : MonoBehaviour
 {
     public bool autoRunOnAwake = true;
     bool loaded;
-    
     private double currCamHeight = 1000;
 
     //airports
-
     public TextAsset airportsFile;
     public TextAsset airportsCSVFile;
     public Airport[] airports;
@@ -110,16 +108,17 @@ public class LoadingManager : MonoBehaviour
     private void Update()
     {
         currCamHeight = GameObject.Find("CesiumGeoreference").GetComponent<CesiumGeoreference>().height;
-        float scale = (float)(currCamHeight / 100 + 2000);
+        float airportScale = (float)(currCamHeight / 100 + 2000);
+        float airplaneScale = airportScale/5;
 
         foreach ( var airport in airports)
         {
-            airport.location.transform.localScale = new Vector3(scale, scale, scale);
+            airport.location.transform.localScale = new Vector3(airportScale, airportScale, airportScale);
         }
 
         foreach ( var airplane in airplanes)
         {
-            airplane.location.transform.localScale = new Vector3(scale, scale, scale);
+            airplane.location.transform.localScale = new Vector3(airplaneScale, airplaneScale, airplaneScale);
         }
     }
 }

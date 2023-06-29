@@ -30,21 +30,7 @@ public class AirportCsvReader
                     airportInfo.elevation = 0;
                     airportInfo.latitude = Convert.ToDouble(fields[4]);
                     airportInfo.longitude = Convert.ToDouble(fields[5]);
-
-                    /*
-                    //Setup Globe Anchor
-                    GameObject location = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    location.AddComponent<CesiumGlobeAnchor>();
-                    location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
-                    location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airportInfo.longitude, airportInfo.latitude, 0);
-
-                    //Adjust Sizing of Globe
-                    location.GetComponent<SphereCollider>().radius = 10000;
-                    location.transform.localScale = new Vector3(10000, 10000, 10000);
-                    location.name = airportInfo.name;
-
-                    airportInfo.location = location;
-                    */
+                    
                     airports.Add(airportInfo);
                 }
             }

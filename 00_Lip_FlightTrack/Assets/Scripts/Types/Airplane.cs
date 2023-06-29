@@ -3,6 +3,7 @@ using Unity.VisualScripting.InputSystem;
 using CesiumForUnity;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class Aircraft
@@ -71,6 +72,7 @@ public class DataItem
     public Speed speed;
     public string status;
     public SystemInfo system;
+    public GameObject location;
 }
 
 [System.Serializable]
@@ -78,4 +80,5 @@ public class Airplane
 {
     public bool success;
     public List<DataItem> data;
+
 }
