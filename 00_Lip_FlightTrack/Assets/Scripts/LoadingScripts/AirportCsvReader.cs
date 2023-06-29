@@ -31,6 +31,7 @@ public class AirportCsvReader
                     airportInfo.latitude = Convert.ToDouble(fields[4]);
                     airportInfo.longitude = Convert.ToDouble(fields[5]);
 
+                    /*
                     //Setup Globe Anchor
                     GameObject location = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     location.AddComponent<CesiumGlobeAnchor>();
@@ -43,6 +44,7 @@ public class AirportCsvReader
                     location.name = airportInfo.name;
 
                     airportInfo.location = location;
+                    */
                     airports.Add(airportInfo);
                 }
             }
