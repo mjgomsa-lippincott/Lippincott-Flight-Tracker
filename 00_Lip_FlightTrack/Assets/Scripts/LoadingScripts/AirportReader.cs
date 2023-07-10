@@ -13,10 +13,10 @@ public class AirportReader
     JsonTextReader reader;
 
     //Read airport json file
-    public Airport[] ReadAirports(TextAsset airportFile)
+    public List<Airport> ReadAirports(TextAsset airportFile)
     {
         List<Airport> airports = Read(airportFile);
-        return airports.ToArray();
+        return airports;
     }
 
     List<Airport> Read(TextAsset airportFile)

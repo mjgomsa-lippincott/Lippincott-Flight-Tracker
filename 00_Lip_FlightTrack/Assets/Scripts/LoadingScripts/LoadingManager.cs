@@ -1,12 +1,9 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using System;
 using CesiumForUnity;
-using static UnityEditor.FilePathAttribute;
 using Unity.Mathematics;
+using TMPro.Examples;
+using System;
 
 public class LoadingManager : MonoBehaviour
 {
@@ -17,12 +14,12 @@ public class LoadingManager : MonoBehaviour
     //airports
     public TextAsset airportsFile;
     public TextAsset airportsCSVFile;
-    public Airport[] airports;
+    public List<Airport> airports;
     public bool JsonAirports = false;
 
     // airplanes
     public TextAsset airplaneFile;
-    private List<DataItem> airplanes;
+    public List<DataItem> airplanes;
     private string jsonStr;
     public Airplane parsedData;
 
@@ -34,7 +31,8 @@ public class LoadingManager : MonoBehaviour
             if (JsonAirports)
             {
                 LoadJsonAirports();
-            } else
+            }
+            else
             {
                 LoadCsvAirports();
             }
@@ -42,12 +40,14 @@ public class LoadingManager : MonoBehaviour
         }
     }
 
-    public void LoadAirplanes() {
+    public void LoadAirplanes()
+    {
         if (airplaneFile != null)
         {
             jsonStr = airplaneFile.text;
-   
-        } else
+
+        }
+        else
         {
             Debug.Log("Is Null");
         }
@@ -58,7 +58,7 @@ public class LoadingManager : MonoBehaviour
         Debug.Log("loading Json Airports");
         if (airportsFile != null)
         {
-             AirportReader airportReader = new AirportReader();
+            AirportReader airportReader = new AirportReader();
             airports = airportReader.ReadAirports(airportsFile);
         }
     }
@@ -77,15 +77,16 @@ public class LoadingManager : MonoBehaviour
     {
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
         airplanes = parsedData.data;
-        
-        foreach(var airplane in airplanes)
+
+        foreach (var airplane in airplanes)
         {
             //Setup Globe Anchor
             GameObject location = GameObject.CreatePrimitive(PrimitiveType.Cube);
             location.AddComponent<CesiumGlobeAnchor>();
             location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
             location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airplane.geography.longitude, airplane.geography.latitude, airplane.geography.altitude);
-            
+            //location.GetComponent<CesiumGlobeAnchor>().detectTransformChanges = false;
+
             //Adjust Sizing of Globe
             location.name = airplane.flight.iataNumber;
             airplane.location = location;
@@ -109,15 +110,23 @@ public class LoadingManager : MonoBehaviour
     {
         currCamHeight = GameObject.Find("CesiumGeoreference").GetComponent<CesiumGeoreference>().height;
         float airportScale = (float)(currCamHeight / 100 + 2000);
-        float airplaneScale = airportScale/5;
+        float airplaneScale = airportScale / 5;
 
-        foreach ( var airport in airports)
+        foreach (var airport in airports)
         {
-            airport.location.transform.localScale = new Vector3(airportScale, airportScale, airportScale);
+            if (airport.location != null)
+            {
+                airport.location.transform.localScale = new Vector3(airportScale, airportScale, airportScale);
+            }
         }
 
-        foreach ( var airplane in airplanes)
+        foreach (var airplane in airplanes)
         {
+            var lonComponent = Mathf.Sin(airplane.geography.direction) * airplane.speed.horizontal / 600000 ; // 0.008 km per degree
+            var latComponent = Mathf.Cos(airplane.geography.direction) * airplane.speed.horizontal / 600000 ;
+            var prevLatLon = airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight;
+            airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = prevLatLon + new double3(latComponent, lonComponent, 0);
+
             airplane.location.transform.localScale = new Vector3(airplaneScale, airplaneScale, airplaneScale);
         }
     }

@@ -5,7 +5,7 @@ using CesiumForUnity;
 
 public class AirportCsvReader
 {
-    public Airport[] ReadAirports(TextAsset airportCSVFile)
+    public List<Airport> ReadAirports(TextAsset airportCSVFile)
     {
         List<Airport> airports = new List<Airport>();
 
@@ -36,6 +36,6 @@ public class AirportCsvReader
             }
         }
         Debug.Log("Finished Parsing CSV");
-        return airports.ToArray();
+        return airports;
     }
 }

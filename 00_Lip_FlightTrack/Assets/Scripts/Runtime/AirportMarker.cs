@@ -5,7 +5,7 @@ using CesiumForUnity;
 
 public class CityMarker : MonoBehaviour
 {
-    Airport[] airports;
+    List<Airport> airports;
     GameObject[] markers;
     void Start()
     {
