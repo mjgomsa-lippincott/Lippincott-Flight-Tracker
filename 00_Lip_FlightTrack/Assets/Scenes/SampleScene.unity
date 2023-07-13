@@ -822,6 +822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1897286606}
   - component: {fileID: 1897286605}
+  - component: {fileID: 1897286607}
   m_Layer: 0
   m_Name: LoadingMan
   m_TagString: Untagged
@@ -846,10 +847,7 @@ MonoBehaviour:
   airportsCSVFile: {fileID: 4900000, guid: eeebabdd388a05d46b535c5e643f5417, type: 3}
   airports: []
   JsonAirports: 0
-  airplaneFile: {fileID: 4900000, guid: ddb09a0c64de47d4a9d45a70cb3ae0aa, type: 3}
-  parsedData:
-    success: 0
-    data: []
+  apiDataManager: {fileID: 0}
 --- !u!4 &1897286606
 Transform:
   m_ObjectHideFlags: 0
@@ -865,3 +863,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1897286607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897286604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61444067cf6f00e4f82a8942ffc24546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CUBES: {fileID: 0}
+  cesiumGeoreferences: []
+  cubeObjects: []

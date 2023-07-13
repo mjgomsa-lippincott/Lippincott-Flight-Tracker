@@ -5,7 +5,6 @@ using CesiumForUnity;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine.Scripting;
-using UnityEngine;
 using UnityEngine.Timeline;
 
 public class AirportReader

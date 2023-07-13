@@ -1,17 +1,13 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using System;
 using CesiumForUnity;
-using static UnityEditor.FilePathAttribute;
-using Unity.Mathematics;
+using System.Net;
+using System.IO;
 
 public class LoadingManager : MonoBehaviour
 {
+    // global
     public bool autoRunOnAwake = true;
-    bool loaded;
     private double currCamHeight = 1000;
 
     //airports
@@ -21,10 +17,11 @@ public class LoadingManager : MonoBehaviour
     public bool JsonAirports = false;
 
     // airplanes
-    public TextAsset airplaneFile;
     private List<DataItem> airplanes;
     private string jsonStr;
-    public Airplane parsedData;
+    private Airplane parsedData;
+
+    APIDataManager apiMan;
 
 
     void Awake()
@@ -38,19 +35,21 @@ public class LoadingManager : MonoBehaviour
             {
                 LoadCsvAirports();
             }
-            LoadAirplanes();
+            LoadJsonAirplanes();
         }
     }
 
-    public void LoadAirplanes() {
-        if (airplaneFile != null)
-        {
-            jsonStr = airplaneFile.text;
-   
-        } else
-        {
-            Debug.Log("Is Null");
-        }
+    public void LoadJsonAirplanes() {
+        /*
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://app.goflightlabs.com/flights?access_key=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYTc3OWE5MWU0YmQ0ZGE1MzRkZWIzNzkyNzBkYzllZDg0OTdiMWYxYWQyMWNiZTRiM2QwOTBjNjg5MDE2ZmRhNGE2Yzk1NGFmNWYwMzAzZDQiLCJpYXQiOjE2ODc4MTM2MzMsIm5iZiI6MTY4NzgxMzYzMywiZXhwIjoxNzE5NDM2MDMzLCJzdWIiOiIyMTI2NiIsInNjb3BlcyI6W119.tNUVzLBmTNre_7YFvnWlf0u1AisxVV0TA-tm6N1RpAhrO2OwERMQBfk55klKZR5sxQWjEDKAYs5x9WKoYG2T7w");
+        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        StreamReader sr = new StreamReader(response.GetResponseStream());
+        */
+
+        GameObject gameObject = new GameObject("APIDataManager");
+        apiMan = gameObject.AddComponent<APIDataManager>();
+        jsonStr = apiMan.jsonData;
+        
     }
 
     public void LoadJsonAirports()
@@ -77,8 +76,9 @@ public class LoadingManager : MonoBehaviour
     {
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
         airplanes = parsedData.data;
-        
-        foreach(var airplane in airplanes)
+
+
+        foreach (var airplane in airplanes)
         {
             //Setup Globe Anchor
             GameObject location = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -91,6 +91,7 @@ public class LoadingManager : MonoBehaviour
             airplane.location = location;
 
         }
+
         foreach (var airport in airports)
         {
             //Setup Globe Anchor
