@@ -3,6 +3,8 @@ using UnityEngine;
 using CesiumForUnity;
 using System.Net;
 using System.IO;
+using System;
+using System.Collections;
 
 public class LoadingManager : MonoBehaviour
 {
@@ -21,7 +23,11 @@ public class LoadingManager : MonoBehaviour
     private string jsonStr;
     private Airplane parsedData;
 
-    APIDataManager apiMan;
+    //API
+    private string apiKey;
+    private string apiURL;
+    private const float RequestCooldown = 1.5f * 60 * 60; //Cooldown time in seconds, 1.5 hours
+    private const string LastRequestKey = "LastAPIRequest";
 
 
     void Awake()
@@ -35,22 +41,10 @@ public class LoadingManager : MonoBehaviour
             {
                 LoadCsvAirports();
             }
-            LoadJsonAirplanes();
+            //LoadJsonAirplanes();
         }
     }
 
-    public void LoadJsonAirplanes() {
-        /*
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://app.goflightlabs.com/flights?access_key=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiYTc3OWE5MWU0YmQ0ZGE1MzRkZWIzNzkyNzBkYzllZDg0OTdiMWYxYWQyMWNiZTRiM2QwOTBjNjg5MDE2ZmRhNGE2Yzk1NGFmNWYwMzAzZDQiLCJpYXQiOjE2ODc4MTM2MzMsIm5iZiI6MTY4NzgxMzYzMywiZXhwIjoxNzE5NDM2MDMzLCJzdWIiOiIyMTI2NiIsInNjb3BlcyI6W119.tNUVzLBmTNre_7YFvnWlf0u1AisxVV0TA-tm6N1RpAhrO2OwERMQBfk55klKZR5sxQWjEDKAYs5x9WKoYG2T7w");
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        StreamReader sr = new StreamReader(response.GetResponseStream());
-        */
-
-        GameObject gameObject = new GameObject("APIDataManager");
-        apiMan = gameObject.AddComponent<APIDataManager>();
-        jsonStr = apiMan.jsonData;
-        
-    }
 
     public void LoadJsonAirports()
     {
@@ -74,6 +68,7 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(GetJSON());
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
         airplanes = parsedData.data;
 
@@ -105,6 +100,62 @@ public class LoadingManager : MonoBehaviour
             airport.location = location;
         }
     }
+
+    IEnumerator GetJSON()
+    {
+        DateTime lastRequestTime = GetLastRequestTime();
+        DateTime currentTime = DateTime.Now;
+        TimeSpan timeSinceLastRequest = currentTime - lastRequestTime;
+
+        Debug.Log(lastRequestTime.ToString());
+
+        if (timeSinceLastRequest.TotalSeconds >= RequestCooldown)
+        {
+            Debug.Log("Cooldown time has passed, make a new API request");
+            // Cooldown time has passed, make a new API request
+            jsonStr = RequestDataFromAPI();
+
+        }
+        else
+        {
+            Debug.Log("Cooldown time has NOT passed, send old request JSON stored string");
+            // Cooldown time has not passed, send old request JSON stored string
+            jsonStr = PlayerPrefs.GetString("APIResponse");
+        }
+        yield return jsonStr;
+    }
+
+    private string RequestDataFromAPI()
+    {
+        string apiKeyFilePath = Path.Combine(Application.dataPath, "APIKey.txt");
+        apiKey = File.ReadAllText(apiKeyFilePath);
+        apiURL = "https://app.goflightlabs.com/flights?access_key=" + apiKey;
+
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiURL);
+        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        StreamReader sr = new StreamReader(response.GetResponseStream());
+
+        string toReturn = sr.ReadToEnd(); //  Actual API request code
+        PlayerPrefs.SetString(LastRequestKey, DateTime.Now.ToString());
+        PlayerPrefs.SetString("APIResponse", toReturn);
+
+        return toReturn;
+    }
+
+    private DateTime GetLastRequestTime()
+    {
+        string lastRequestString = PlayerPrefs.GetString(LastRequestKey);
+        if (!string.IsNullOrEmpty(lastRequestString))
+        {
+            DateTime lastRequestTime;
+            if (DateTime.TryParse(lastRequestString, out lastRequestTime))
+            {
+                return lastRequestTime;
+            }
+        }
+        return DateTime.MinValue;
+    }
+
 
     private void Update()
     {
