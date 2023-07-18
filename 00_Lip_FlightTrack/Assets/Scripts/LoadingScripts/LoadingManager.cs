@@ -4,15 +4,11 @@ using CesiumForUnity;
 using Unity.Mathematics;
 using TMPro.Examples;
 using System;
-using System.Net;
-using System.IO;
-using System;
-using System.Collections;
 
 public class LoadingManager : MonoBehaviour
 {
-    // global
     public bool autoRunOnAwake = true;
+    bool loaded;
     private double currCamHeight = 1000;
 
     //airports
@@ -22,15 +18,10 @@ public class LoadingManager : MonoBehaviour
     public bool JsonAirports = false;
 
     // airplanes
-    private List<DataItem> airplanes;
+    public TextAsset airplaneFile;
+    public List<DataItem> airplanes;
     private string jsonStr;
-    private Airplane parsedData;
-
-    //API
-    private string apiKey;
-    private string apiURL;
-    private const float RequestCooldown = 1.5f * 60 * 60; //Cooldown time in seconds, 1.5 hours
-    private const string LastRequestKey = "LastAPIRequest";
+    public Airplane parsedData;
 
 
     void Awake()
@@ -45,10 +36,22 @@ public class LoadingManager : MonoBehaviour
             {
                 LoadCsvAirports();
             }
-            //LoadJsonAirplanes();
+            LoadAirplanes();
         }
     }
 
+    public void LoadAirplanes()
+    {
+        if (airplaneFile != null)
+        {
+            jsonStr = airplaneFile.text;
+
+        }
+        else
+        {
+            Debug.Log("Is Null");
+        }
+    }
 
     public void LoadJsonAirports()
     {
@@ -72,7 +75,6 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(GetJSON());
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
         airplanes = parsedData.data;
 
@@ -90,7 +92,6 @@ public class LoadingManager : MonoBehaviour
             airplane.location = location;
 
         }
-
         foreach (var airport in airports)
         {
             //Setup Globe Anchor
@@ -104,62 +105,6 @@ public class LoadingManager : MonoBehaviour
             airport.location = location;
         }
     }
-
-    IEnumerator GetJSON()
-    {
-        DateTime lastRequestTime = GetLastRequestTime();
-        DateTime currentTime = DateTime.Now;
-        TimeSpan timeSinceLastRequest = currentTime - lastRequestTime;
-
-        Debug.Log(lastRequestTime.ToString());
-
-        if (timeSinceLastRequest.TotalSeconds >= RequestCooldown)
-        {
-            Debug.Log("Cooldown time has passed, make a new API request");
-            // Cooldown time has passed, make a new API request
-            jsonStr = RequestDataFromAPI();
-
-        }
-        else
-        {
-            Debug.Log("Cooldown time has NOT passed, send old request JSON stored string");
-            // Cooldown time has not passed, send old request JSON stored string
-            jsonStr = PlayerPrefs.GetString("APIResponse");
-        }
-        yield return jsonStr;
-    }
-
-    private string RequestDataFromAPI()
-    {
-        string apiKeyFilePath = Path.Combine(Application.dataPath, "APIKey.txt");
-        apiKey = File.ReadAllText(apiKeyFilePath);
-        apiURL = "https://app.goflightlabs.com/flights?access_key=" + apiKey;
-
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiURL);
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        StreamReader sr = new StreamReader(response.GetResponseStream());
-
-        string toReturn = sr.ReadToEnd(); //  Actual API request code
-        PlayerPrefs.SetString(LastRequestKey, DateTime.Now.ToString());
-        PlayerPrefs.SetString("APIResponse", toReturn);
-
-        return toReturn;
-    }
-
-    private DateTime GetLastRequestTime()
-    {
-        string lastRequestString = PlayerPrefs.GetString(LastRequestKey);
-        if (!string.IsNullOrEmpty(lastRequestString))
-        {
-            DateTime lastRequestTime;
-            if (DateTime.TryParse(lastRequestString, out lastRequestTime))
-            {
-                return lastRequestTime;
-            }
-        }
-        return DateTime.MinValue;
-    }
-
 
     private void Update()
     {
