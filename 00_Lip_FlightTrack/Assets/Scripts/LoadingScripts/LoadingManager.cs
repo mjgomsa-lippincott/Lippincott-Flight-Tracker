@@ -8,12 +8,14 @@ using System.Net;
 using System.IO;
 using System;
 using System.Collections;
+using static UnityEditor.FilePathAttribute;
 
 public class LoadingManager : MonoBehaviour
 {
     // global
     public bool autoRunOnAwake = true;
     private double currCamHeight = 1000;
+    public bool onlySouthwest = false;
 
     //airports
     public TextAsset airportsFile;
@@ -25,6 +27,8 @@ public class LoadingManager : MonoBehaviour
     private List<DataItem> airplanes;
     private string jsonStr;
     private Airplane parsedData;
+
+    public Material mat;
 
     //API
     private string apiKey;
@@ -76,10 +80,29 @@ public class LoadingManager : MonoBehaviour
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
         airplanes = parsedData.data;
 
+        //Optionally Only Filtering Southwest Planes
+        if (onlySouthwest)
+        {
+            List<DataItem> filteredAirplanes = new List<DataItem>();
+            foreach (var airplane in airplanes)
+            {
+                if (airplane.airline.iataCode == "WN")
+                {
+                    filteredAirplanes.Add(airplane);
+                }
+            }
+            airplanes = filteredAirplanes;
+        }
+
         foreach (var airplane in airplanes)
         {
             //Setup Globe Anchor
             GameObject location = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            if (airplane.airline.iataCode == "WN") //Identifying South West Airplanes
+            {
+                location.GetComponent<Renderer>().material = mat;
+            }
+
             location.AddComponent<CesiumGlobeAnchor>();
             location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
             location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airplane.geography.longitude, airplane.geography.latitude, airplane.geography.altitude);
@@ -182,7 +205,14 @@ public class LoadingManager : MonoBehaviour
             var prevLatLon = airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight;
             airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = prevLatLon + new double3(latComponent, lonComponent, 0);
 
-            airplane.location.transform.localScale = new Vector3(airplaneScale, airplaneScale, airplaneScale);
+            //Making Southwest Planes Larger
+            if (airplane.airline.iataCode == "WN")
+            {
+                airplane.location.transform.localScale = new Vector3(airplaneScale * 2, airplaneScale * 2, airplaneScale * 2);
+            } else
+            {
+                airplane.location.transform.localScale = new Vector3(airplaneScale, airplaneScale, airplaneScale);
+            }
         }
     }
 }
