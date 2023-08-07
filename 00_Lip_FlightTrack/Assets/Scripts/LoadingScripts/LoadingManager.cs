@@ -8,7 +8,7 @@ using System.Net;
 using System.IO;
 using System;
 using System.Collections;
-using static UnityEditor.FilePathAttribute;
+//using static UnityEditor.FilePathAttribute;
 
 public class LoadingManager : MonoBehaviour
 {
