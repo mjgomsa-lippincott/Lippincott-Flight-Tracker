@@ -24,11 +24,13 @@ public class LoadingManager : MonoBehaviour
     public bool JsonAirports = false;
 
     // airplanes
-    private List<DataItem> airplanes;
+    public List<DataItem> airplanes;
     private string jsonStr;
     private Airplane parsedData;
 
     public Material mat;
+    public GameObject planePrefab;
+    public GameObject airportPrefab;
 
     //API
     private string apiKey;
@@ -97,7 +99,8 @@ public class LoadingManager : MonoBehaviour
         foreach (var airplane in airplanes)
         {
             //Setup Globe Anchor
-            GameObject location = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Debug.Log(airplane.geography.direction);
+            GameObject location = Instantiate(planePrefab, new Vector3(0, 0, 0), Quaternion.Euler(90, 0, airplane.geography.direction));//GameObject.CreatePrimitive(PrimitiveType.Cube);
             if (airplane.airline.iataCode == "WN") //Identifying South West Airplanes
             {
                 location.GetComponent<Renderer>().material = mat;
@@ -117,7 +120,7 @@ public class LoadingManager : MonoBehaviour
         foreach (var airport in airports)
         {
             //Setup Globe Anchor
-            GameObject location = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject location = Instantiate(airportPrefab, new Vector3(0, 0, 0), Quaternion.identity);//GameObject.CreatePrimitive(PrimitiveType.Sphere);
             location.AddComponent<CesiumGlobeAnchor>();
             location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
             location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airport.longitude, airport.latitude, 0);
@@ -200,8 +203,8 @@ public class LoadingManager : MonoBehaviour
 
         foreach (var airplane in airplanes)
         {
-            var lonComponent = Mathf.Sin(airplane.geography.direction) * airplane.speed.horizontal / 600000 ; // 0.008 km per degree
-            var latComponent = Mathf.Cos(airplane.geography.direction) * airplane.speed.horizontal / 600000 ;
+            var lonComponent = Mathf.Sin(airplane.geography.direction) * airplane.speed.horizontal / 6000000 ; // 0.008 km per degree
+            var latComponent = 2 *Mathf.Cos(airplane.geography.direction) * airplane.speed.horizontal / 6000000 ;
             var prevLatLon = airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight;
             airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = prevLatLon + new double3(latComponent, lonComponent, 0);
 
