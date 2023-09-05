@@ -100,7 +100,7 @@ public class LoadingManager : MonoBehaviour
         {
             //Setup Globe Anchor
             Debug.Log(airplane.geography.direction);
-            GameObject location = Instantiate(planePrefab, new Vector3(0, 0, 0), Quaternion.Euler(90, 0, airplane.geography.direction));//GameObject.CreatePrimitive(PrimitiveType.Cube);
+            GameObject location = Instantiate(planePrefab, new Vector3(0, 0, 0), Quaternion.Euler(90, 0, 0));//GameObject.CreatePrimitive(PrimitiveType.Cube);
             if (airplane.airline.iataCode == "WN") //Identifying South West Airplanes
             {
                 location.GetComponent<Renderer>().material = mat;
@@ -108,7 +108,7 @@ public class LoadingManager : MonoBehaviour
 
             location.AddComponent<CesiumGlobeAnchor>();
             location.transform.SetParent(GameObject.Find("CesiumGeoreference").transform);
-            location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airplane.geography.longitude, airplane.geography.latitude, airplane.geography.altitude);
+            location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new Unity.Mathematics.double3(airplane.geography.longitude, airplane.geography.latitude, airplane.geography.altitude + 1000);
             //location.GetComponent<CesiumGlobeAnchor>().detectTransformChanges = false;
 
             //Adjust Sizing of Globe
@@ -203,10 +203,12 @@ public class LoadingManager : MonoBehaviour
 
         foreach (var airplane in airplanes)
         {
-            var lonComponent = Mathf.Sin(airplane.geography.direction) * airplane.speed.horizontal / 6000000 ; // 0.008 km per degree
-            var latComponent = 2 *Mathf.Cos(airplane.geography.direction) * airplane.speed.horizontal / 6000000 ;
+            double dir = (double)airplane.geography.direction / 180.00 * Math.PI;
+            var lonComponent = 2 * Math.Sin(dir) * airplane.speed.horizontal / 1000000.00; // 0.008 km per degree
+            var latComponent = Math.Cos(dir) * airplane.speed.horizontal / 1000000.00;
             var prevLatLon = airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight;
-            airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = prevLatLon + new double3(latComponent, lonComponent, 0);
+            airplane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = prevLatLon + new double3(lonComponent, latComponent, 0);
+            airplane.location.GetComponent<CesiumGlobeAnchor>().rotationEastUpNorth = Quaternion.Euler(90, 180 + airplane.geography.direction,0);
 
             //Making Southwest Planes Larger
             if (airplane.airline.iataCode == "WN")

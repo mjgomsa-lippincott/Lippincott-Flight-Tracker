@@ -102,12 +102,12 @@ public class CameraAnimation : MonoBehaviour
         }
         else if (stage == 5)
         {
-            planePosition = plane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight + new double3(0, 0, 100);
+            planePosition = plane.location.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight + new double3(0, 0, 1000);
             cam.GetComponentInParent<CesiumGlobeAnchor>().longitudeLatitudeHeight = planePosition;
         }
         else if (stage == 6)
         {
-            GetComponentInParent<SceneController>().ToggleScenes();
+            //GetComponentInParent<SceneController>().ToggleScenes();
         }
 
         //double3 camPos = cam.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight;

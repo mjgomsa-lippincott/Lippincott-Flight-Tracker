@@ -1602,6 +1602,7 @@ GameObject:
   - component: {fileID: 1315734981}
   - component: {fileID: 1315734980}
   - component: {fileID: 1315734982}
+  - component: {fileID: 1315734983}
   m_Layer: 0
   m_Name: LoadingMan
   m_TagString: Untagged
@@ -1674,6 +1675,18 @@ MonoBehaviour:
   countryTransitionLen: 15
   planePauseLen: 5
   loader: {fileID: 1315734980}
+--- !u!114 &1315734983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315734979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8033b73671007c2468611a4e1f3b4b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1371659744
 GameObject:
   m_ObjectHideFlags: 0
