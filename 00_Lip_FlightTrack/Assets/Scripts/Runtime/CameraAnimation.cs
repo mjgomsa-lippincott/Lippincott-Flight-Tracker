@@ -107,7 +107,7 @@ public class CameraAnimation : MonoBehaviour
         }
         else if (stage == 6)
         {
-            //GetComponentInParent<SceneController>().ToggleScenes();
+            GetComponentInParent<SceneController>().ToggleScenes();
         }
 
         //double3 camPos = cam.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight;

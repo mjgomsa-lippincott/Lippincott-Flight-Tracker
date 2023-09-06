@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using System;
 using System.Collections;
+using UnityEngine.Rendering;
 //using static UnityEditor.FilePathAttribute;
 
 public class LoadingManager : MonoBehaviour
@@ -37,7 +38,6 @@ public class LoadingManager : MonoBehaviour
     private string apiURL;
     private const float RequestCooldown = 1.5f * 60 * 60; //Cooldown time in seconds, 1.5 hours
     private const string LastRequestKey = "LastAPIRequest";
-
 
     void Awake()
     {
@@ -78,6 +78,22 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
+        if (GraphicsSettings.defaultRenderPipeline != null)
+        {
+            Debug.Log("The default render pipeline: " + GraphicsSettings.defaultRenderPipeline.name);
+        } else
+        {
+            Debug.Log("Built In Render Pipeline");
+        }
+
+        if (QualitySettings.renderPipeline != null)
+        {
+            Debug.Log("The render pipeline: " + QualitySettings.renderPipeline.name);
+        } else
+        {
+            Debug.Log("Default active");
+        }
+
         StartCoroutine(GetJSON());
         parsedData = JsonUtility.FromJson<Airplane>(jsonStr);
         airplanes = parsedData.data;
@@ -99,7 +115,6 @@ public class LoadingManager : MonoBehaviour
         foreach (var airplane in airplanes)
         {
             //Setup Globe Anchor
-            Debug.Log(airplane.geography.direction);
             GameObject location = Instantiate(planePrefab, new Vector3(0, 0, 0), Quaternion.Euler(90, 0, 0));//GameObject.CreatePrimitive(PrimitiveType.Cube);
             if (airplane.airline.iataCode == "WN") //Identifying South West Airplanes
             {
