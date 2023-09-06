@@ -203,7 +203,7 @@ MonoBehaviour:
   _enableFogCulling: 1
   _enforceCulledScreenSpaceError: 0
   _culledScreenSpaceError: 64
-  _opaqueMaterial: {fileID: 2100000, guid: 791c14bb850020149ad697c97af99500, type: 2}
+  _opaqueMaterial: {fileID: 0}
   _generateSmoothNormals: 0
   _pointCloudShading:
     _attenuation: 0
@@ -1737,7 +1737,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 0
+  m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
@@ -2539,7 +2539,7 @@ MonoBehaviour:
   _enableFogCulling: 1
   _enforceCulledScreenSpaceError: 1
   _culledScreenSpaceError: 64
-  _opaqueMaterial: {fileID: 2100000, guid: afe975f5c25d5c34abead5c1e37aa221, type: 2}
+  _opaqueMaterial: {fileID: 0}
   _generateSmoothNormals: 0
   _pointCloudShading:
     _attenuation: 0
